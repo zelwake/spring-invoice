@@ -1,5 +1,6 @@
 package dev.zelwake.spring_postman.invoice;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -32,16 +33,8 @@ public class InvoiceController {
     }
 
     @PostMapping("")
-    ResponseEntity<String> createNew(@RequestBody InvoiceDTO invoice) {
-        Invoice newInvoice = new Invoice(
-                null,
-                invoice.invoiceNumber(),
-                LocalDate.now(),
-                LocalDate.now().plusDays(20),
-                Status.PENDING,
-                invoice.amount()
-        );
-        Invoice savedInvoice = invoices.saveInvoice(newInvoice);
+    ResponseEntity<String> createNew(@Valid @RequestBody InvoiceDTO invoice) {
+        Invoice savedInvoice = invoices.saveInvoice(invoice);
         return ResponseEntity.created(URI.create(savedInvoice.id().toString())).build();
     }
 
@@ -51,5 +44,15 @@ public class InvoiceController {
         return invoice.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PutMapping("/{id}")
+    ResponseEntity<String> updateById(@PathVariable String id, @Valid @RequestBody Invoice invoice) {
+        UpdateInvoiceStatus updatedInvoice = invoices.updateInvoice(id, invoice);
 
+        if (updatedInvoice == UpdateInvoiceStatus.UPDATED)
+            return ResponseEntity.noContent().build();
+        else if (updatedInvoice == UpdateInvoiceStatus.NOT_FOUND)
+            return ResponseEntity.notFound().build();
+        else
+            return ResponseEntity.badRequest().body("Wrong format of body");
+    }
 }
