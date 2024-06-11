@@ -25,7 +25,7 @@ public class InvoiceController {
     ResponseEntity<InvoiceResponseDTO> findAll(Pageable pageable, PagedResourcesAssembler<Invoice> assembler) {
         try {
             Page<Invoice> page = invoices.getInvoices(pageable);
-            InvoiceResponseDTO invoice = new InvoiceResponseDTO(page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getContent());
+            InvoiceResponseDTO invoice = new InvoiceResponseDTO(page.getTotalPages(), page.getTotalElements(), page.getNumber() + 1, page.getContent());
             return ResponseEntity.ok(invoice);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

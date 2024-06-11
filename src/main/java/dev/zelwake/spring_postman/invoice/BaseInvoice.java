@@ -8,8 +8,8 @@ import java.time.LocalDate;
 
 public interface BaseInvoice {
     @NotBlank(message = "Missing invoice number") String invoiceNumber();
-    @NotBlank(message = "Missing amount number") Integer amount();
-    @NotBlank LocalDate issuedOn();
+    @NotNull(message = "Missing amount number") Integer amount();
+    @NotNull LocalDate issuedOn();
     LocalDate expectedOn();
 }
 

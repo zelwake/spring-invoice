@@ -1,13 +1,15 @@
 package dev.zelwake.spring_postman.invoice;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
 public record InvoiceDTO(
-        @NotEmpty String invoiceNumber,
-        @NotEmpty Integer amount,
-        @NotEmpty LocalDate issuedOn,
+        @NotBlank String invoiceNumber,
+        @NotNull Integer amount,
+        @NotNull LocalDate issuedOn,
         LocalDate expectedOn
 ) implements BaseInvoice {
 }
