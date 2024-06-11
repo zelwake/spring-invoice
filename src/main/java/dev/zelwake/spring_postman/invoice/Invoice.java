@@ -1,13 +1,13 @@
 package dev.zelwake.spring_postman.invoice;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
-public record Invoice(
-        @Id String id,
+public record Invoice (
+        @Id UUID id,
         @NotEmpty String invoiceNumber,
         LocalDate issuedOn,
         LocalDate paidOn,
