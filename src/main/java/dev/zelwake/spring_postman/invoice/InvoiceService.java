@@ -21,7 +21,7 @@ public class InvoiceService {
     }
 
     Page<Invoice> getInvoices(Pageable pageable) {
-        return repository.findAll((PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSortOr(Sort.by(Sort.Direction.ASC, "issuedOn")))));
+        return repository.findAll(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSortOr(Sort.by(Sort.Direction.ASC, "issuedOn"))));
     }
 
     public Invoice saveInvoice(InvoiceDTO invoiceData) {

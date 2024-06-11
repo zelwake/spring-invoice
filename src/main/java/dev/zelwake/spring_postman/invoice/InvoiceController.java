@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.Optional;
 
 @RestController
@@ -22,10 +21,10 @@ public class InvoiceController {
     }
 
     @GetMapping("")
-    ResponseEntity<InvoiceResponseDTO> findAll(Pageable pageable, PagedResourcesAssembler<Invoice> assembler) {
+    ResponseEntity<InvoiceResponseDTO> findAll(Pageable pageable) {
         try {
             Page<Invoice> page = invoices.getInvoices(pageable);
-            InvoiceResponseDTO invoice = new InvoiceResponseDTO(page.getTotalPages(), page.getTotalElements(), page.getNumber() + 1, page.getContent());
+            InvoiceResponseDTO invoice = new InvoiceResponseDTO(page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getContent());
             return ResponseEntity.ok(invoice);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
