@@ -34,7 +34,7 @@ public class InvoiceController {
     @PostMapping("")
     ResponseEntity<String> createNew(@Valid @RequestBody InvoiceDTO invoice) {
         Invoice savedInvoice = invoices.saveInvoice(invoice);
-        return ResponseEntity.created(URI.create(savedInvoice.id().toString())).build();
+        return savedInvoice != null ? ResponseEntity.created(URI.create(savedInvoice.id().toString())).build() : ResponseEntity.badRequest().body("Items body is missing properties");
     }
 
     @GetMapping("/{id}")

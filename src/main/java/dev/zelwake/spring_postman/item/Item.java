@@ -12,5 +12,5 @@ public record Item(
         @NotNull Integer value,
         @NotNull Integer amount,
         @NotNull UUID invoiceId
-) {
+) implements BaseItem {
 }
