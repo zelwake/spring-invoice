@@ -40,7 +40,7 @@ public class InvoiceController {
     @GetMapping("/{id}")
     ResponseEntity<Invoice> findById(@PathVariable String id) {
         Optional<Invoice> invoice = invoices.getInvoiceById(id);
-        return invoice.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
+        return invoice.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")

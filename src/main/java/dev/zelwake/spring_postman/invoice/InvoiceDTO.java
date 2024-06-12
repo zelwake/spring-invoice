@@ -8,7 +8,6 @@ import java.util.UUID;
 
 public record InvoiceDTO(
         @NotBlank String invoiceNumber,
-        @NotNull Integer amount,
         @NotNull LocalDate issuedOn,
         LocalDate expectedOn,
         @NotNull UUID customerId

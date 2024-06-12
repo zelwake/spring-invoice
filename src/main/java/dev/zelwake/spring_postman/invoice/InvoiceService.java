@@ -32,7 +32,8 @@ public class InvoiceService {
                 (invoiceData.expectedOn() != null) ? invoiceData.expectedOn() : invoiceData.issuedOn().plusDays(20),
                 null,
                 Status.PENDING,
-                invoiceData.amount()
+                0, //TODO - update invoiceDTO to take items and calculate amount from them
+                invoiceData.customerId()
         );
         return repository.save(newInvoice);
     }
