@@ -1,10 +1,10 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
---DROP TABLE IF EXISTS Invoice;
---DROP TABLE IF EXISTS Catalogue;
 --DROP TABLE IF EXISTS item;
+--DROP TABLE IF EXISTS invoice;
+--DROP TABLE IF EXISTS customer;
 
-CREATE TABLE IF NOT EXISTS catalogue (
+CREATE TABLE IF NOT EXISTS customer (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
     ICO varchar(30),
     name varchar(100) NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS invoice (
     PRIMARY KEY(id),
     CONSTRAINT FK_InvoiceCustomer
         FOREIGN KEY(customer_id)
-            REFERENCES Catalogue(id)
+            REFERENCES customer(id)
 );
 
 CREATE TABLE IF NOT EXISTS item (

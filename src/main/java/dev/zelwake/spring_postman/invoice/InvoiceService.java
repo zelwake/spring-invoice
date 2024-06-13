@@ -3,14 +3,12 @@ package dev.zelwake.spring_postman.invoice;
 import dev.zelwake.spring_postman.invoiceItem.InvoiceItem;
 import dev.zelwake.spring_postman.invoiceItem.InvoiceItemService;
 import dev.zelwake.spring_postman.item.ItemService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

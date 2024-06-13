@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -48,11 +47,8 @@ public class InvoiceController {
     ResponseEntity<String> updateById(@PathVariable String id, @Valid @RequestBody Invoice invoice) {
         UpdateInvoiceStatus updatedInvoice = invoices.updateInvoice(id, invoice);
 
-        if (updatedInvoice == UpdateInvoiceStatus.UPDATED)
-            return ResponseEntity.noContent().build();
-        else if (updatedInvoice == UpdateInvoiceStatus.NOT_FOUND)
-            return ResponseEntity.notFound().build();
-        else
-            return ResponseEntity.badRequest().body("Wrong format of body");
+        if (updatedInvoice == UpdateInvoiceStatus.UPDATED) return ResponseEntity.noContent().build();
+        else if (updatedInvoice == UpdateInvoiceStatus.NOT_FOUND) return ResponseEntity.notFound().build();
+        else return ResponseEntity.badRequest().body("Wrong format of body");
     }
 }
