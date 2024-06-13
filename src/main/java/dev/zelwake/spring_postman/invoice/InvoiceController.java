@@ -1,5 +1,6 @@
 package dev.zelwake.spring_postman.invoice;
 
+import dev.zelwake.spring_postman.invoiceItem.InvoiceItem;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,9 +39,9 @@ public class InvoiceController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Invoice> findById(@PathVariable UUID id) {
-        Optional<Invoice> invoice = invoices.getInvoiceById(id);
-        return invoice.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    ResponseEntity<InvoiceItem> findById(@PathVariable UUID id) {
+        InvoiceItem invoiceDetail = invoices.getInvoiceById(id);
+        return invoiceDetail != null ? ResponseEntity.ok(invoiceDetail) : ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")

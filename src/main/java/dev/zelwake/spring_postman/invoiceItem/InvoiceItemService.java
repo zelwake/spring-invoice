@@ -2,7 +2,6 @@ package dev.zelwake.spring_postman.invoiceItem;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 @Service
@@ -15,10 +14,8 @@ public class InvoiceItemService {
     }
 
     public InvoiceItem findInvoiceDetailById(UUID id) {
-        InvoiceItem invoiceDetail = invoiceItemRepository.findInvoiceWithItemsByInvoiceId(id);
         try {
-            System.out.println(invoiceDetail);
-            return invoiceDetail;
+            return invoiceItemRepository.findInvoiceWithItemsByInvoiceId(id);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;

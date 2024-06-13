@@ -1,5 +1,6 @@
 package dev.zelwake.spring_postman.invoice;
 
+import dev.zelwake.spring_postman.invoiceItem.InvoiceItem;
 import dev.zelwake.spring_postman.invoiceItem.InvoiceItemService;
 import dev.zelwake.spring_postman.item.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,9 +60,8 @@ public class InvoiceService {
         return savedInvoice;
     }
 
-    public Optional<Invoice> getInvoiceById(UUID id) {
-        invoiceItemService.findInvoiceDetailById(id);
-        return invoiceRepository.findById(String.valueOf(id));
+    public InvoiceItem getInvoiceById(UUID id) {
+        return invoiceItemService.findInvoiceDetailById(id);
     }
 
     public UpdateInvoiceStatus updateInvoice(String id, Invoice invoice) {
