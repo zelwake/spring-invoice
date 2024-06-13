@@ -1,5 +1,7 @@
 package dev.zelwake.spring_postman.invoice;
 
+import dev.zelwake.spring_postman.invoiceCustomer.InvoiceCustomer;
+import dev.zelwake.spring_postman.invoiceCustomer.InvoiceCustomerService;
 import dev.zelwake.spring_postman.invoiceItem.InvoiceItem;
 import dev.zelwake.spring_postman.invoiceItem.InvoiceItemService;
 import dev.zelwake.spring_postman.item.ItemService;
@@ -18,15 +20,17 @@ public class InvoiceService {
 
     private final ItemService itemService;
     private final InvoiceItemService invoiceItemService;
+    private final InvoiceCustomerService invoiceCustomerService;
 
-    public InvoiceService(InvoiceRepository invoiceRepository, ItemService itemService, InvoiceItemService invoiceItemService) {
+    public InvoiceService(InvoiceRepository invoiceRepository, ItemService itemService, InvoiceItemService invoiceItemService, InvoiceCustomerService invoiceCustomerService) {
         this.invoiceRepository = invoiceRepository;
         this.itemService = itemService;
         this.invoiceItemService = invoiceItemService;
+        this.invoiceCustomerService = invoiceCustomerService;
     }
 
-    Page<Invoice> getInvoices(Pageable pageable) {
-        return invoiceRepository.findAll(PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSortOr(Sort.by(Sort.Direction.ASC, "issuedOn"))));
+    Page<InvoiceCustomer> getInvoices(Pageable pageable) {
+        return invoiceCustomerService.getAllInvoiceWithCustomerName(pageable);
     }
 
     public Invoice saveInvoice(InvoiceDTO invoiceData) {

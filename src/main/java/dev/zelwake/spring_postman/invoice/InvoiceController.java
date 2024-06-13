@@ -1,7 +1,10 @@
 package dev.zelwake.spring_postman.invoice;
 
+import dev.zelwake.spring_postman.invoiceCustomer.InvoiceCustomer;
 import dev.zelwake.spring_postman.invoiceItem.InvoiceItem;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,8 @@ import java.util.UUID;
 @RequestMapping("/api/invoices")
 public class InvoiceController {
 
+    Logger logger = LoggerFactory.getLogger(InvoiceController.class);
+
     private final InvoiceService invoices;
 
     InvoiceController(InvoiceService invoiceService) {
@@ -22,11 +27,13 @@ public class InvoiceController {
 
     @GetMapping("")
     ResponseEntity<InvoiceResponseDTO> findAll(Pageable pageable) {
+        System.out.println("called /api/invoices");
         try {
-            Page<Invoice> page = invoices.getInvoices(pageable);
+            Page<InvoiceCustomer> page = invoices.getInvoices(pageable);
             InvoiceResponseDTO invoice = new InvoiceResponseDTO(page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getContent());
             return ResponseEntity.ok(invoice);
         } catch (Exception e) {
+            logger.error(e.toString());
             return ResponseEntity.notFound().build();
         }
     }
