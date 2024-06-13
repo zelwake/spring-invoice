@@ -24,7 +24,7 @@ public class ItemService {
         }
     }
 
-    boolean saveItems(List<ItemDTO> items, UUID invoiceId) {
+    public boolean saveItems(List<ItemDTO> items, UUID invoiceId) {
         try {
             List<Item> newItems = items.stream().map(i -> new Item(null, i.name(), i.value(), i.amount(), invoiceId)).toList();
             itemRepository.saveAll(newItems);

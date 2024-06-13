@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/invoices")
@@ -37,7 +38,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Invoice> findById(@PathVariable String id) {
+    ResponseEntity<Invoice> findById(@PathVariable UUID id) {
         Optional<Invoice> invoice = invoices.getInvoiceById(id);
         return invoice.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
