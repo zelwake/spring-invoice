@@ -1,7 +1,6 @@
 package dev.zelwake.spring_postman.invoiceItem;
 
 import dev.zelwake.spring_postman.invoice.Status;
-import dev.zelwake.spring_postman.item.Item;
 import dev.zelwake.spring_postman.item.ItemDTO;
 
 import java.time.LocalDate;

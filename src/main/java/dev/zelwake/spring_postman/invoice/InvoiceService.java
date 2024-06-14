@@ -1,9 +1,9 @@
 package dev.zelwake.spring_postman.invoice;
 
+import dev.zelwake.spring_postman.customerInvoiceItem.CustomerInvoiceItem;
+import dev.zelwake.spring_postman.customerInvoiceItem.CustomerInvoiceItemService;
 import dev.zelwake.spring_postman.invoiceCustomer.InvoiceCustomer;
 import dev.zelwake.spring_postman.invoiceCustomer.InvoiceCustomerService;
-import dev.zelwake.spring_postman.invoiceItem.InvoiceItem;
-import dev.zelwake.spring_postman.invoiceItem.InvoiceItemService;
 import dev.zelwake.spring_postman.item.ItemService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,14 +17,15 @@ public class InvoiceService {
     private final InvoiceRepository invoiceRepository;
 
     private final ItemService itemService;
-    private final InvoiceItemService invoiceItemService;
     private final InvoiceCustomerService invoiceCustomerService;
+    private final CustomerInvoiceItemService customerInvoiceItemService;
 
-    public InvoiceService(InvoiceRepository invoiceRepository, ItemService itemService, InvoiceItemService invoiceItemService, InvoiceCustomerService invoiceCustomerService) {
+    public InvoiceService(InvoiceRepository invoiceRepository, ItemService itemService, InvoiceCustomerService invoiceCustomerService, CustomerInvoiceItemService customerInvoiceItemService) {
         this.invoiceRepository = invoiceRepository;
+
         this.itemService = itemService;
-        this.invoiceItemService = invoiceItemService;
         this.invoiceCustomerService = invoiceCustomerService;
+        this.customerInvoiceItemService = customerInvoiceItemService;
     }
 
     Page<InvoiceCustomer> getInvoices(Pageable pageable) {
@@ -60,8 +61,8 @@ public class InvoiceService {
         return savedInvoice;
     }
 
-    public InvoiceItem getInvoiceById(UUID id) {
-        return invoiceItemService.findInvoiceDetailById(id);
+    public CustomerInvoiceItem getInvoiceById(UUID id) {
+        return customerInvoiceItemService.getInvoiceWithCustomerItemsById(id).orElse(null);
     }
 
     public UpdateInvoiceStatus updateInvoice(String id, Invoice invoice) {

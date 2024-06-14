@@ -1,19 +1,23 @@
-package dev.zelwake.spring_postman.invoiceCustomer;
+package dev.zelwake.spring_postman.customerInvoiceItem;
 
 import dev.zelwake.spring_postman.customer.CustomerNameDTO;
 import dev.zelwake.spring_postman.invoice.Status;
+import dev.zelwake.spring_postman.invoiceCustomer.BaseInvoiceCustomer;
+import dev.zelwake.spring_postman.item.ItemDTO;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
-public record InvoiceCustomer(
+public record CustomerInvoiceItem(
         UUID id,
         String invoiceNumber,
+        Integer amount,
         LocalDate issuedOn,
         LocalDate expectedOn,
         LocalDate paidOn,
         Status status,
-        Integer amount,
-        CustomerNameDTO customer
+        CustomerNameDTO customer,
+        List<ItemDTO> items
 ) implements BaseInvoiceCustomer {
 }
