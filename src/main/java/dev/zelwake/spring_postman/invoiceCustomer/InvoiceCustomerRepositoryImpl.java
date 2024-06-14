@@ -6,6 +6,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,7 @@ import java.util.*;
 public class InvoiceCustomerRepositoryImpl implements InvoiceCustomerRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private static final Set<String> VALID_SORT_COLUMNS = Set.of("id", "invoice_number", "issued_on", "expected_on", "paid_on", "status", "amount", "customer_name");
 
     public InvoiceCustomerRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -52,7 +54,7 @@ public class InvoiceCustomerRepositoryImpl implements InvoiceCustomerRepository 
     public Page<InvoiceCustomer> findAllInvoiceWithCustomerName(Pageable pageable) {
         int limit = pageable.getPageSize();
         long offset = pageable.getOffset();
-        String sortClause = "";
+        String sortClause = buildSortClause(pageable.getSort());
 
         String countSql = "SELECT COUNT(*) FROM invoice";
         Integer total = jdbcTemplate.queryForObject(countSql, Integer.class);
@@ -72,6 +74,32 @@ public class InvoiceCustomerRepositoryImpl implements InvoiceCustomerRepository 
             invoiceCustomers = new ArrayList<>(); // IDEa is telling me that invoiceCustomers might be null even tho it is returning empty ArrayList
         }
         return new PageImpl<>(invoiceCustomers, pageable, total);
+    }
+
+    private String buildSortClause(Sort sort) {
+        if (sort.isUnsorted()) {
+            return "";
+        }
+
+        StringBuilder sortClause = new StringBuilder(" ORDER BY ");
+        for (Sort.Order order : sort) {
+            String property = order.getProperty();
+            if (VALID_SORT_COLUMNS.contains(property)) {
+                sortClause.append(property)
+                        .append(" ")
+                        .append(order.getDirection().isAscending() ? "ASC" : "DESC")
+                        .append(", ");
+            }
+        }
+        // Remove the trailing comma and space
+        if (sortClause.length() > " ORDER BY ".length()) {
+            sortClause.setLength(sortClause.length() - 2);
+        } else {
+            // If no valid sort columns, return an empty string
+            return "";
+        }
+
+        return sortClause.toString();
     }
 
     private static class InvoiceCustomerResultSetExtractor implements ResultSetExtractor<Optional<InvoiceCustomer>> {

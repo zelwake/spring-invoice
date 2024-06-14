@@ -15,6 +15,5 @@ public record InvoiceCustomer(
         Status status,
         Integer amount,
         CustomerNameDTO customer
-//        int numberOfItems
 ) {
 }
