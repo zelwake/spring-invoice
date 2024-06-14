@@ -14,7 +14,7 @@ public record InvoiceCustomer(
         LocalDate paidOn,
         Status status,
         Integer amount,
-        CustomerNameDTO customer,
-        int numberOfItems
+        CustomerNameDTO customer
+//        int numberOfItems
 ) {
 }
