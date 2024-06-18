@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.UUID;
 
 public record InvoiceDTO(
-        @NotBlank String invoiceNumber,
-        @NotNull LocalDate issuedOn,
+        @NotBlank(message = "Invoice number has to be specified") String invoiceNumber,
+        @NotNull(message = "Need to set date when invoiced was issued") LocalDate issuedOn,
         LocalDate expectedOn,
-        @NotNull UUID customerId,
+        @NotNull(message = "Customer id is not set") UUID customerId,
         @NotNull(message = "At least one item has to be provided (name, value, amount)") List<ItemDTO> items
 ) implements BaseInvoice {
 }
