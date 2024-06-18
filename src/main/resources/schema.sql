@@ -3,6 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 --DROP TABLE IF EXISTS item;
 --DROP TABLE IF EXISTS invoice;
 --DROP TABLE IF EXISTS customer;
+--DROP TABLE IF EXISTS payment;
 
 CREATE TABLE IF NOT EXISTS customer (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -36,15 +37,20 @@ CREATE TABLE IF NOT EXISTS item (
     name varchar(150) NOT NULL,
     price_in_cents INTEGER NOT NULL,
     amount INTEGER NOT NULL,
-    invoice_id uuid,
+    invoice_id uuid NOT NULL,
 
     CONSTRAINT FK_ItemInvoice
         FOREIGN KEY(invoice_id)
             REFERENCES Invoice(id)
 );
 
---ALTER TABLE invoice
---    RENAME amount TO total_price_in_cents;
---
---ALTER TABLE IF EXISTS item
---    RENAME IF EXISTS value TO price_in_cents;
+CREATE TABLE IF NOT EXISTS payment (
+    id SERIAL PRIMARY KEY,
+    date TIMESTAMP NOT NULL,
+    invoice_id uuid NOT NULL,
+    amount_in_cents INTEGER NOT NULL,
+
+    CONSTRAINT FK_InvoicePayment
+        FOREIGN KEY(invoice_id)
+            REFERENCES Invoice(id)
+);
