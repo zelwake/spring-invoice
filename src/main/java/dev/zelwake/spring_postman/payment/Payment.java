@@ -1,10 +1,10 @@
-package dev.zelwake.spring_postman;
+package dev.zelwake.spring_postman.payment;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 public record Payment(
-        int Id,
+        Integer id,
         LocalDate date,
         UUID invoiceId,
         int amountInCents
