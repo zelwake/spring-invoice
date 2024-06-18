@@ -1,5 +1,6 @@
 package dev.zelwake.spring_postman.invoice;
 
+import dev.zelwake.spring_postman.customerInvoiceItem.CustomerInvoiceItemDTO;
 import dev.zelwake.spring_postman.exceptions.ResourceBadRequest;
 import dev.zelwake.spring_postman.utils.PaginatedResponse;
 import dev.zelwake.spring_postman.customerInvoiceItem.CustomerInvoiceItem;
@@ -53,8 +54,8 @@ public class InvoiceController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<CustomerInvoiceItem> findById(@PathVariable UUID id) {
-        CustomerInvoiceItem invoiceDetail = invoices.getInvoiceById(id);
+    ResponseEntity<CustomerInvoiceItemDTO> findById(@PathVariable UUID id) {
+        CustomerInvoiceItemDTO invoiceDetail = invoices.getInvoiceById(id);
         if (invoiceDetail == null) {
             throw new ResourceNotFound("No invoice with this id exists");
         }

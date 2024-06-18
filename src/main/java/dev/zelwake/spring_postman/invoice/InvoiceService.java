@@ -67,20 +67,16 @@ public class InvoiceService {
         return savedInvoice;
     }
 
-    public CustomerInvoiceItem getInvoiceById(UUID id) {
+    public CustomerInvoiceItemDTO getInvoiceById(UUID id) {
         Optional<CustomerInvoiceItem> customerFromDB = customerInvoiceItemService.getInvoiceWithCustomerItemsById(id);
-        if (customerFromDB.isEmpty()) {
-            return null;
-        }
-        CustomerInvoiceItemDTO customer = asCustomerInvoiceItemDTO(customerFromDB.get());
-        return customerInvoiceItemService.getInvoiceWithCustomerItemsById(id).orElse(null);
+        return customerFromDB.map(this::asCustomerInvoiceItemDTO).orElse(null);
     }
 
     private CustomerInvoiceItemDTO asCustomerInvoiceItemDTO(CustomerInvoiceItem item) {
         return new CustomerInvoiceItemDTO(
                 item.id(),
                 item.invoiceNumber(),
-                (float) (item.price() / 100),
+                (float) item.price() / 100,
                 item.issuedOn(),
                 item.expectedOn(),
                 item.paidOn(),
@@ -111,6 +107,6 @@ public class InvoiceService {
     }
 
     public List<ItemRequestDTO> asItemDTOList(List<ItemDTO> items) {
-        return items.stream().map(i -> new ItemRequestDTO(i.name(), (float) (i.priceInCents() / 100), i.amount())).toList();
+        return items.stream().map(i -> new ItemRequestDTO(i.name(), (float) i.priceInCents() / 100, i.amount())).toList();
     }
 }

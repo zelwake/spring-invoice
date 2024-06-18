@@ -14,7 +14,7 @@ public record Invoice(
         @NotNull LocalDate expectedOn,
         LocalDate paidOn,
         Status status,
-        @NotNull Integer totalPriceInCents,
+        @NotNull(message = "Price cannot be empty") Integer totalPriceInCents,
         @NotNull UUID customerId
 ) implements BaseInvoice {
 }
