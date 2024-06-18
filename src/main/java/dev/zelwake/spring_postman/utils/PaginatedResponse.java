@@ -1,4 +1,4 @@
-package dev.zelwake.spring_postman;
+package dev.zelwake.spring_postman.utils;
 
 import java.util.List;
 

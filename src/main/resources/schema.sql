@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS invoice (
     expected_on TIMESTAMP NOT NULL,
     paid_on TIMESTAMP DEFAULT NULL,
     status varchar(20) NOT NULL,
-    amount INTEGER NOT NULL,
+    total_price_in_cents INTEGER NOT NULL,
     customer_id uuid NOT NULL,
 
     PRIMARY KEY(id),
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS invoice (
 CREATE TABLE IF NOT EXISTS item (
     id SERIAL PRIMARY KEY,
     name varchar(150) NOT NULL,
-    value INTEGER NOT NULL,
+    price_in_cents INTEGER NOT NULL,
     amount INTEGER NOT NULL,
     invoice_id uuid,
 
@@ -42,3 +42,9 @@ CREATE TABLE IF NOT EXISTS item (
         FOREIGN KEY(invoice_id)
             REFERENCES Invoice(id)
 );
+
+--ALTER TABLE invoice
+--    RENAME amount TO total_price_in_cents;
+--
+--ALTER TABLE IF EXISTS item
+--    RENAME IF EXISTS value TO price_in_cents;

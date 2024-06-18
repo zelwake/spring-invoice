@@ -33,7 +33,7 @@ public class InvoiceCustomerRepositoryImpl implements InvoiceCustomerRepository 
         LocalDate expectedOn = LocalDate.from(rs.getTimestamp("expected_on").toLocalDateTime());
         LocalDate paidOn = rs.getTimestamp("paid_on") != null ? LocalDate.from(rs.getTimestamp("paid_on").toLocalDateTime()) : null;
         Status status = Status.valueOf(rs.getString("status"));
-        int amount = rs.getInt("amount");
+        int amount = rs.getInt("total_price_in_cents");
         UUID customerId = UUID.fromString(rs.getString("customer_id"));
         String customerName = rs.getString("customer_name");
         CustomerNameDTO customer = new CustomerNameDTO(customerId, customerName);
@@ -42,7 +42,7 @@ public class InvoiceCustomerRepositoryImpl implements InvoiceCustomerRepository 
     }
 
     @Override
-    public Optional<InvoiceCustomer> findInvoiceWithCustomerNameById(UUID id) {
+    public Optional<InvoiceCustomer> getInvoiceWithCustomerNameById(UUID id) {
         String sql = "SELECT i.*, c.name AS customer_name, COUNT(*) AS number_of_items FROM invoice AS i " +
                 "JOIN customer AS c ON i.customer_id = c.id " +
                 "WHERE i.id = ?";
@@ -51,7 +51,7 @@ public class InvoiceCustomerRepositoryImpl implements InvoiceCustomerRepository 
     }
 
     @Override
-    public Page<InvoiceCustomer> findAllInvoiceWithCustomerName(Pageable pageable) {
+    public Page<InvoiceCustomer> getAllInvoiceWithCustomerName(Pageable pageable) {
         int limit = pageable.getPageSize();
         long offset = pageable.getOffset();
         String sortClause = buildSortClause(pageable.getSort());

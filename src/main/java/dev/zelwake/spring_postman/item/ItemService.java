@@ -16,7 +16,7 @@ public class ItemService {
 
     boolean saveItem(ItemDTO item, UUID invoiceId) {
         try {
-            itemRepository.save(new Item(null, item.name(), item.value(), item.amount(), invoiceId));
+            itemRepository.save(new Item(null, item.name(), item.priceInCents(), item.amount(), invoiceId));
             return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -26,7 +26,7 @@ public class ItemService {
 
     public boolean saveItems(List<ItemDTO> items, UUID invoiceId) {
         try {
-            List<Item> newItems = items.stream().map(i -> new Item(null, i.name(), i.value(), i.amount(), invoiceId)).toList();
+            List<Item> newItems = items.stream().map(i -> new Item(null, i.name(), i.priceInCents(), i.amount(), invoiceId)).toList();
             itemRepository.saveAll(newItems);
             return true;
         } catch (Exception e) {

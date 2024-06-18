@@ -9,7 +9,7 @@ import java.util.UUID;
 public record Item(
         @Id Integer id,
         @NotBlank String name,
-        @NotNull Integer value,
+        @NotNull Integer priceInCents,
         @NotNull Integer amount,
         @NotNull UUID invoiceId
 ) implements BaseItem {

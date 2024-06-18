@@ -13,7 +13,7 @@ public record InvoiceCustomer(
         LocalDate expectedOn,
         LocalDate paidOn,
         Status status,
-        Integer amount,
+        Integer price,
         CustomerNameDTO customer
 ) implements BaseInvoiceCustomer {
 }

@@ -5,6 +5,6 @@ import java.util.UUID;
 
 public interface CustomerInvoiceItemRepository {
 
-    Optional<CustomerInvoiceItem> findCustomerInvoiceItemById(UUID id);
+    Optional<CustomerInvoiceItem> getCustomerInvoiceItemById(UUID id);
 
 }

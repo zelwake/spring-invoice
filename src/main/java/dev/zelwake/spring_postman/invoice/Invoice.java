@@ -14,7 +14,7 @@ public record Invoice(
         @NotNull LocalDate expectedOn,
         LocalDate paidOn,
         Status status,
-        @NotNull Integer amount,
+        @NotNull Integer totalPriceInCents,
         @NotNull UUID customerId
 ) implements BaseInvoice {
 }

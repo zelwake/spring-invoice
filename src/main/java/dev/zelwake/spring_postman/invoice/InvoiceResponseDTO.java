@@ -10,5 +10,4 @@ public record InvoiceResponseDTO(
         Integer currentPage,
         List<InvoiceCustomer> content
 ) {
-
 }

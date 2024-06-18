@@ -15,6 +15,6 @@ public class CustomerInvoiceItemService {
     }
 
     public Optional<CustomerInvoiceItem> getInvoiceWithCustomerItemsById(UUID id) {
-        return customerInvoiceItemRepository.findCustomerInvoiceItemById(id);
+        return customerInvoiceItemRepository.getCustomerInvoiceItemById(id);
     }
 }

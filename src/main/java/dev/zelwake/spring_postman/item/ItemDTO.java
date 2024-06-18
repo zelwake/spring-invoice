@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record ItemDTO(
         @NotBlank(message = "Name cannot be empty") String name,
-        @NotNull(message = "Value per item needs to be specified") Integer value,
+        @NotNull(message = "Value per item needs to be specified") Integer priceInCents,
         @NotNull(message = "Amount of items cannot be null") Integer amount
-) implements BaseItem {
+) {
 }

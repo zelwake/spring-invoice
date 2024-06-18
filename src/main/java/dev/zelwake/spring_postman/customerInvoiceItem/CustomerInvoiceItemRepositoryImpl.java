@@ -27,12 +27,12 @@ public class CustomerInvoiceItemRepositoryImpl implements CustomerInvoiceItemRep
     }
 
     @Override
-    public Optional<CustomerInvoiceItem> findCustomerInvoiceItemById(UUID id) {
+    public Optional<CustomerInvoiceItem> getCustomerInvoiceItemById(UUID id) {
 
         String sql = "SELECT i.*, " +
                      "	c.name AS customer_name, " +
-                     "	it.name AS item_name, it.amount AS item_amount, it.value AS item_value FROM ( " +
-                     "	SELECT id, invoice_number, amount AS invoice_amount, issued_on, expected_on, paid_on, status, customer_id " +
+                     "	it.name AS item_name, it.amount AS item_amount, it.price_in_cents AS item_price_in_cents FROM ( " +
+                     "	SELECT id, invoice_number, total_price_in_cents AS total_price_in_cents, issued_on, expected_on, paid_on, status, customer_id " +
                      "	FROM invoice " +
                      "	WHERE id = ? " +
                      "	) AS i " +
@@ -49,7 +49,7 @@ public class CustomerInvoiceItemRepositoryImpl implements CustomerInvoiceItemRep
 
             UUID id = null;
             String invoiceNumber = null;
-            int amount = 0;
+            int totalPriceInCents = 0;
             LocalDate issuedOn = null;
             LocalDate expectedOn = null;
             LocalDate paidOn = null;
@@ -63,7 +63,7 @@ public class CustomerInvoiceItemRepositoryImpl implements CustomerInvoiceItemRep
             while(rs.next()) {
                 id = UUID.fromString(rs.getString("id"));
                 invoiceNumber = rs.getString("invoice_number");
-                amount = rs.getInt("invoice_amount");
+                totalPriceInCents = rs.getInt("total_price_in_cents");
                 issuedOn = LocalDate.from(rs.getTimestamp("issued_on").toLocalDateTime());
                 expectedOn = LocalDate.from(rs.getTimestamp("expected_on").toLocalDateTime());
                 Timestamp paidOnObject = rs.getTimestamp("expected_on");
@@ -75,14 +75,14 @@ public class CustomerInvoiceItemRepositoryImpl implements CustomerInvoiceItemRep
 
                 String itemName = rs.getString("item_name");
                 if (itemName != null) {
-                    int itemValue = rs.getInt("item_value");
+                    int itemValue = rs.getInt("item_price_in_cents");
                     int itemAmount = rs.getInt("item_amount");
                     items.add(new ItemDTO(itemName, itemValue, itemAmount));
                 }
             }
             if (id != null) {
                 CustomerNameDTO customer = new CustomerNameDTO(customerId, customerName);
-                CustomerInvoiceItem customerInvoiceItem = new CustomerInvoiceItem(id, invoiceNumber, amount, issuedOn, expectedOn, paidOn, status, customer, items);
+                CustomerInvoiceItem customerInvoiceItem = new CustomerInvoiceItem(id, invoiceNumber, totalPriceInCents, issuedOn, expectedOn, paidOn, status, customer, items);
 
                 return Optional.of(customerInvoiceItem);
             }

@@ -1,6 +1,9 @@
 package dev.zelwake.spring_postman.invoice;
 
+import dev.zelwake.spring_postman.exceptions.ResourceBadRequest;
+import dev.zelwake.spring_postman.utils.PaginatedResponse;
 import dev.zelwake.spring_postman.customerInvoiceItem.CustomerInvoiceItem;
+import dev.zelwake.spring_postman.exceptions.ResourceNotFound;
 import dev.zelwake.spring_postman.invoiceCustomer.InvoiceCustomer;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -11,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,27 +30,35 @@ public class InvoiceController {
     }
 
     @GetMapping("")
-    ResponseEntity<InvoiceResponseDTO> findAll(Pageable pageable) {
+    ResponseEntity<PaginatedResponse<InvoiceCustomer>> getAllInvoices(Pageable pageable) {
         try {
             Page<InvoiceCustomer> page = invoices.getInvoices(pageable);
-            InvoiceResponseDTO invoice = new InvoiceResponseDTO(page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getContent());
+            List<InvoiceCustomer> customers = page.getContent().stream().map(c -> new InvoiceCustomer(c.id(), c.invoiceNumber(), c.issuedOn(), c.expectedOn(), c.paidOn(), c.status(), c.price() / 100, c.customer())).toList();
+            PaginatedResponse<InvoiceCustomer> invoice = new PaginatedResponse<>(page.getTotalPages(), page.getTotalElements(), page.getNumber(), customers);
             return ResponseEntity.ok(invoice);
         } catch (Exception e) {
             logger.error(e.toString());
-            return ResponseEntity.notFound().build();
+            logger.error(e.getMessage());
+            throw new ResourceBadRequest("Wrong use of query parameters");
         }
     }
 
     @PostMapping("")
-    ResponseEntity<String> createNew(@Valid @RequestBody InvoiceDTO invoice) {
-        Invoice savedInvoice = invoices.saveInvoice(invoice);
-        return savedInvoice != null ? ResponseEntity.created(URI.create(savedInvoice.id().toString())).build() : ResponseEntity.badRequest().body("Items body is missing properties");
+    ResponseEntity<String> addNewInvoice(@Valid @RequestBody InvoiceRequestDTO invoice) {
+        Invoice savedInvoice = invoices.addInvoice(invoice);
+        if (savedInvoice == null) {
+            throw new ResourceBadRequest("Items body is missing properties");
+        }
+        return ResponseEntity.created(URI.create(savedInvoice.id().toString())).build();
     }
 
     @GetMapping("/{id}")
     ResponseEntity<CustomerInvoiceItem> findById(@PathVariable UUID id) {
         CustomerInvoiceItem invoiceDetail = invoices.getInvoiceById(id);
-        return invoiceDetail != null ? ResponseEntity.ok(invoiceDetail) : ResponseEntity.notFound().build();
+        if (invoiceDetail == null) {
+            throw new ResourceNotFound("No invoice with this id exists");
+        }
+        return ResponseEntity.ok(invoiceDetail);
     }
 
     @PutMapping("/{id}")

@@ -12,7 +12,7 @@ import java.util.UUID;
 public record CustomerInvoiceItem(
         UUID id,
         String invoiceNumber,
-        Integer amount,
+        Integer price,
         LocalDate issuedOn,
         LocalDate expectedOn,
         LocalDate paidOn,

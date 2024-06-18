@@ -17,10 +17,10 @@ public class InvoiceCustomerService {
     }
 
     public Optional<InvoiceCustomer> getInvoiceWithCustomerNameById(UUID id) {
-        return invoiceCustomerRepository.findInvoiceWithCustomerNameById(id);
+        return invoiceCustomerRepository.getInvoiceWithCustomerNameById(id);
     }
 
     public Page<InvoiceCustomer> getAllInvoiceWithCustomerName(Pageable pageable) {
-        return invoiceCustomerRepository.findAllInvoiceWithCustomerName(pageable);
+        return invoiceCustomerRepository.getAllInvoiceWithCustomerName(pageable);
     }
 }

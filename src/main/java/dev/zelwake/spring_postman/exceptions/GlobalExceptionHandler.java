@@ -1,4 +1,4 @@
-package dev.zelwake.spring_postman.errors;
+package dev.zelwake.spring_postman.exceptions;
 
 import dev.zelwake.spring_postman.invoice.InvoiceController;
 import org.slf4j.Logger;
