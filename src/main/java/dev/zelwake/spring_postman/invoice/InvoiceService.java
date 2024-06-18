@@ -1,6 +1,7 @@
 package dev.zelwake.spring_postman.invoice;
 
 import dev.zelwake.spring_postman.customerInvoiceItem.CustomerInvoiceItem;
+import dev.zelwake.spring_postman.customerInvoiceItem.CustomerInvoiceItemDTO;
 import dev.zelwake.spring_postman.customerInvoiceItem.CustomerInvoiceItemService;
 import dev.zelwake.spring_postman.invoiceCustomer.InvoiceCustomer;
 import dev.zelwake.spring_postman.invoiceCustomer.InvoiceCustomerService;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -56,7 +58,7 @@ public class InvoiceService {
         );
 
         Invoice savedInvoice = invoiceRepository.save(newInvoice);
-        List<ItemDTO> items = asListItemDTO(invoiceData.items());
+        List<ItemDTO> items = asItemRequestDTOList(invoiceData.items());
 
         boolean itemsDidSave = itemService.saveItems(items, savedInvoice.id());
         if (!itemsDidSave)
@@ -66,7 +68,25 @@ public class InvoiceService {
     }
 
     public CustomerInvoiceItem getInvoiceById(UUID id) {
+        Optional<CustomerInvoiceItem> customerFromDB = customerInvoiceItemService.getInvoiceWithCustomerItemsById(id);
+        if (customerFromDB.isEmpty()) {
+            return null;
+        }
+        CustomerInvoiceItemDTO customer = asCustomerInvoiceItemDTO(customerFromDB.get());
         return customerInvoiceItemService.getInvoiceWithCustomerItemsById(id).orElse(null);
+    }
+
+    private CustomerInvoiceItemDTO asCustomerInvoiceItemDTO(CustomerInvoiceItem item) {
+        return new CustomerInvoiceItemDTO(
+                item.id(),
+                item.invoiceNumber(),
+                (float) (item.price() / 100),
+                item.issuedOn(),
+                item.expectedOn(),
+                item.paidOn(),
+                item.status(),
+                item.customer(),
+                asItemDTOList(item.items()));
     }
 
     public UpdateInvoiceStatus updateInvoice(String id, Invoice invoice) {
@@ -86,9 +106,11 @@ public class InvoiceService {
         return items.stream().mapToInt(i -> Math.round(i.amount() * (i.price() * 100))).sum();
     }
 
-    public List<ItemDTO> asListItemDTO(List<ItemRequestDTO> items) {
+    public List<ItemDTO> asItemRequestDTOList(List<ItemRequestDTO> items) {
         return items.stream().map(i -> new ItemDTO(i.name(), Math.round(i.price() * 100), i.amount())).toList();
     }
 
+    public List<ItemRequestDTO> asItemDTOList(List<ItemDTO> items) {
+        return items.stream().map(i -> new ItemRequestDTO(i.name(), (float) (i.priceInCents() / 100), i.amount())).toList();
+    }
 }
-

@@ -13,6 +13,6 @@ public interface BaseInvoiceCustomer {
         LocalDate expectedOn();
         LocalDate paidOn();
         Status status();
-        Integer price();
+//        Float price();
         CustomerNameDTO customer();
 }

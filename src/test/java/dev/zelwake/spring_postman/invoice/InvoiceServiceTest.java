@@ -52,7 +52,7 @@ class InvoiceServiceTest {
 
     @Test
     void testDTOConversion() {
-        List<ItemDTO> convertedItems = invoiceService.asListItemDTO(items);
+        List<ItemDTO> convertedItems = invoiceService.asItemRequestDTOList(items);
 
         assertEquals(items.size(), convertedItems.size());
         for (int i = 0; i < convertedItems.size(); i++) {
@@ -62,4 +62,20 @@ class InvoiceServiceTest {
         }
     }
 
+    @Test
+    void testDTORequestConversion() {
+        List<ItemDTO> dtoItems = new ArrayList<>();
+        dtoItems.add(new ItemDTO("one", 12345, 15));
+        dtoItems.add(new ItemDTO("two", 67890, 10));
+        dtoItems.add(new ItemDTO("three", 123456, 5));
+
+        List<ItemRequestDTO> convertedItems = invoiceService.asItemDTOList(dtoItems);
+
+        assertEquals(items.size(), convertedItems.size());
+        for (int i = 0; i < dtoItems.size(); i++) {
+            assertEquals(items.get(i).amount(), convertedItems.get(i).amount());
+            assertEquals(items.get(i).price(), convertedItems.get(i).price());
+            assertEquals(items.get(i).name(), convertedItems.get(i).name());
+        }
+    }
 }
