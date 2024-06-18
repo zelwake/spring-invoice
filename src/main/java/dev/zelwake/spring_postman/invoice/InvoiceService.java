@@ -56,7 +56,7 @@ public class InvoiceService {
         );
 
         Invoice savedInvoice = invoiceRepository.save(newInvoice);
-        List<ItemDTO> items = invoiceData.items().stream().map(i -> new ItemDTO(i.name(), Math.round(i.price() * 100), i.amount())).toList();
+        List<ItemDTO> items = asListItemDTO(invoiceData.items());
 
         boolean itemsDidSave = itemService.saveItems(items, savedInvoice.id());
         if (!itemsDidSave)
@@ -82,8 +82,12 @@ public class InvoiceService {
         }
     }
 
-    public static Integer calcPriceInCents(List<ItemRequestDTO> items) {
+    public Integer calcPriceInCents(List<ItemRequestDTO> items) {
         return items.stream().mapToInt(i -> Math.round(i.amount() * (i.price() * 100))).sum();
+    }
+
+    public List<ItemDTO> asListItemDTO(List<ItemRequestDTO> items) {
+        return items.stream().map(i -> new ItemDTO(i.name(), Math.round(i.price() * 100), i.amount())).toList();
     }
 
 }
