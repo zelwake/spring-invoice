@@ -63,11 +63,11 @@ public class InvoiceController {
     }
 
     @PutMapping("/{id}")
-    ResponseEntity<String> updateById(@PathVariable String id, @Valid @RequestBody Invoice invoice) {
+    ResponseEntity<String> updateById(@PathVariable String id, @Valid @RequestBody InvoiceUpdateDTO invoice) {
         UpdateInvoiceStatus updatedInvoice = invoices.updateInvoice(id, invoice);
 
         if (updatedInvoice == UpdateInvoiceStatus.UPDATED) return ResponseEntity.noContent().build();
         else if (updatedInvoice == UpdateInvoiceStatus.NOT_FOUND) return ResponseEntity.notFound().build();
-        else return ResponseEntity.badRequest().body("Wrong format of body");
+        else return ResponseEntity.badRequest().body("Wrong format of body or incorrect values");
     }
 }

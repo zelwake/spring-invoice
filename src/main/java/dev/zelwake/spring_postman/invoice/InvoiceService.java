@@ -85,17 +85,33 @@ public class InvoiceService {
                 asItemDTOList(item.items()));
     }
 
-    public UpdateInvoiceStatus updateInvoice(String id, Invoice invoice) {
+    public UpdateInvoiceStatus updateInvoice(String id, InvoiceUpdateDTO invoice) {
         try {
-            boolean findInvoice = invoiceRepository.findById(id).isPresent();
-            if (findInvoice) {
-                invoiceRepository.save(invoice);
-                return UpdateInvoiceStatus.UPDATED;
+            Optional<Invoice> findInvoice = invoiceRepository.findById(id);
+            if (findInvoice.isEmpty()) {
+                return UpdateInvoiceStatus.NOT_FOUND;
             }
-            return UpdateInvoiceStatus.NOT_FOUND;
+
+            boolean validInvoice = isValid(id, invoice, findInvoice.get());
+            if (!validInvoice)
+                return UpdateInvoiceStatus.ERROR;
+
+            invoiceRepository.save(asInvoice(invoice));
+            return UpdateInvoiceStatus.UPDATED;
         } catch (Exception e) {
             return UpdateInvoiceStatus.ERROR;
         }
+    }
+
+    public boolean isValid(String id, InvoiceUpdateDTO requestInvoice, Invoice dbInvoice) {
+        boolean hasPathIdEqualToRequestId = id.equals(requestInvoice.id().toString());
+        if (!hasPathIdEqualToRequestId)
+            return false;
+
+        boolean hasSameId = requestInvoice.id() == dbInvoice.id();
+        boolean hasSameInvoiceNumber = requestInvoice.invoiceNumber().equals(dbInvoice.invoiceNumber());
+
+        return hasSameInvoiceNumber && hasSameId;
     }
 
     public Integer calcPriceInCents(List<ItemRequestDTO> items) {
@@ -108,5 +124,9 @@ public class InvoiceService {
 
     public List<ItemRequestDTO> asItemDTOList(List<ItemDTO> items) {
         return items.stream().map(i -> new ItemRequestDTO(i.name(), (float) i.priceInCents() / 100, i.amount())).toList();
+    }
+
+    public Invoice asInvoice(InvoiceUpdateDTO request) {
+        return new Invoice(request.id(), request.invoiceNumber(), request.issuedOn(), request.expectedOn(), request.paidOn(), request.status(), Math.round(request.price() * 100), request.customerId());
     }
 }

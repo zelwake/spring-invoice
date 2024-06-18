@@ -12,8 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -77,5 +79,38 @@ class InvoiceServiceTest {
             assertEquals(items.get(i).price(), convertedItems.get(i).price());
             assertEquals(items.get(i).name(), convertedItems.get(i).name());
         }
+    }
+
+    @Test
+    void testValidatorReturnsTrue() {
+        UUID id = UUID.randomUUID();
+        LocalDate issuedOn = LocalDate.now();
+        LocalDate expectedOn = issuedOn.plusDays(20);
+        UUID customer = UUID.randomUUID();
+        InvoiceUpdateDTO requestInvoice = new InvoiceUpdateDTO(id, "123456", issuedOn, expectedOn, null, null, 123.45f, customer);
+        Invoice dbInvoice = new Invoice(id, "123456", issuedOn, expectedOn, null, null, 45678, customer);
+
+        boolean isValid = invoiceService.isValid(id.toString(), requestInvoice, dbInvoice);
+        assertTrue(isValid);
+    }
+
+    @Test
+    void testValidatorReturnsFalse() {
+        UUID id = UUID.randomUUID();
+        LocalDate issuedOn = LocalDate.now();
+        LocalDate expectedOn = issuedOn.plusDays(20);
+        UUID customer = UUID.randomUUID();
+        InvoiceUpdateDTO requestRandomId = new InvoiceUpdateDTO(UUID.randomUUID(), "123456", issuedOn, expectedOn, null, null, 123.45f, customer);
+        InvoiceUpdateDTO differentInvoiceNumber = new InvoiceUpdateDTO(id, "654321", issuedOn, expectedOn, null, null, 123.45f, customer);
+        Invoice idAsPathId = new Invoice(id, "123456", issuedOn, expectedOn, null, null, 45678, customer);
+        Invoice dbRandomId = new Invoice(UUID.randomUUID(), "123456", issuedOn, expectedOn, null, null, 45678, customer);
+
+        boolean isValid1 = invoiceService.isValid(id.toString(), requestRandomId, idAsPathId); // id and request id are not same
+        boolean isValid2 = invoiceService.isValid(id.toString(), requestRandomId, dbRandomId); // id, request id and db id are not same
+        boolean isValid3 = invoiceService.isValid(id.toString(), differentInvoiceNumber, idAsPathId); // request invoiceNumber and db invoiceNumber are not same
+
+        assertFalse(isValid1);
+        assertFalse(isValid2);
+        assertFalse(isValid3);
     }
 }
