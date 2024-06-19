@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public record PaymentRequestDTO(
         @NotNull(message = "Missing invoice id") UUID invoiceId,
-        @NotNull(message = "Missing amount") Float amount,
+        @NotNull(message = "Missing amount") double amount,
         @NotNull(message = "Missing date of transaction") LocalDate date
 ) {
 }

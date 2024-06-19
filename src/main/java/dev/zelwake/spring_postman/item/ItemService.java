@@ -14,7 +14,7 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    boolean saveItem(ItemDTO item, UUID invoiceId) {
+    public boolean saveItem(ItemDTO item, UUID invoiceId) {
         try {
             itemRepository.save(new Item(null, item.name(), item.priceInCents(), item.amount(), invoiceId));
             return true;

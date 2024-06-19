@@ -67,7 +67,11 @@ public class InvoiceService {
         return savedInvoice;
     }
 
-    public CustomerInvoiceItemDTO getInvoiceById(UUID id) {
+    public Invoice getInvoiceById(UUID id) {
+        return invoiceRepository.findById(id.toString()).orElse(null);
+    }
+
+    public CustomerInvoiceItemDTO getInvoiceDetailedById(UUID id) {
         Optional<CustomerInvoiceItem> customerFromDB = customerInvoiceItemService.getInvoiceWithCustomerItemsById(id);
         return customerFromDB.map(this::asCustomerInvoiceItemDTO).orElse(null);
     }

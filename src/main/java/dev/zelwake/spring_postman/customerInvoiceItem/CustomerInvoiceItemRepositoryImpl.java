@@ -66,7 +66,7 @@ public class CustomerInvoiceItemRepositoryImpl implements CustomerInvoiceItemRep
                 totalPriceInCents = rs.getInt("total_price_in_cents");
                 issuedOn = LocalDate.from(rs.getTimestamp("issued_on").toLocalDateTime());
                 expectedOn = LocalDate.from(rs.getTimestamp("expected_on").toLocalDateTime());
-                Timestamp paidOnObject = rs.getTimestamp("expected_on");
+                Timestamp paidOnObject = rs.getTimestamp("paid_on");
                 paidOn = paidOnObject != null ? LocalDate.from(paidOnObject.toLocalDateTime()) : null;
                 status = Status.valueOf(rs.getString("status"));
                 customerId = UUID.fromString(rs.getString("customer_id"));

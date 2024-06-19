@@ -2,14 +2,12 @@ package dev.zelwake.spring_postman.payment;
 
 import dev.zelwake.spring_postman.exceptions.ResourceNotFound;
 import dev.zelwake.spring_postman.utils.PaginatedResponse;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.net.URI;
 import java.util.UUID;
 
 @RestController
@@ -31,9 +29,18 @@ public class PaymentController {
         return ResponseEntity.ok(paymentList);
     }
 
+    @PostMapping
+    public ResponseEntity<String> addPayment(@Valid @RequestBody PaymentRequestDTO payment) {
+        Payment savedPayment = paymentService.createPayment(payment);
+        if (savedPayment == null) {
+            return ResponseEntity.badRequest().body("Could not create new payment.");
+        }
+
+        return ResponseEntity.created(URI.create(savedPayment.id().toString())).build();
+    }
+
     @GetMapping("/invoice/{id}")
     public ResponseEntity<PaginatedResponse<Payment>> getAllPaymentsByInvoiceId(@PathVariable UUID id, Pageable pageable) {
-        System.out.println("Called api/payment/invoice/" + id);
         PaginatedResponse<Payment> paymentList = paymentService.getAllByInvoiceId(id, pageable);
         if (paymentList.content() == null)
             throw new ResourceNotFound("No payments exists");

@@ -46,9 +46,9 @@ CREATE TABLE IF NOT EXISTS item (
 
 CREATE TABLE IF NOT EXISTS payment (
     id SERIAL PRIMARY KEY,
+    amount_in_cents INTEGER NOT NULL,
     date TIMESTAMP NOT NULL,
     invoice_id uuid NOT NULL,
-    amount_in_cents INTEGER NOT NULL,
 
     CONSTRAINT FK_InvoicePayment
         FOREIGN KEY(invoice_id)
