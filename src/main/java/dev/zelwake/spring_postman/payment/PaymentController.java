@@ -31,6 +31,9 @@ public class PaymentController {
 
     @PostMapping
     public ResponseEntity<String> addPayment(@Valid @RequestBody PaymentRequestDTO payment) {
+        if (payment.amount() <= 0)
+            return ResponseEntity.badRequest().body("Amount has to be a positive number");
+
         Payment savedPayment = paymentService.createPayment(payment);
         if (savedPayment == null) {
             return ResponseEntity.badRequest().body("Could not create new payment.");

@@ -1,6 +1,5 @@
 package dev.zelwake.spring_postman.invoice;
 
-import dev.zelwake.spring_postman.item.ItemDTO;
 import dev.zelwake.spring_postman.item.ItemRequestDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
