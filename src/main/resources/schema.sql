@@ -44,6 +44,8 @@ CREATE TABLE IF NOT EXISTS item (
             REFERENCES Invoice(id)
 );
 
+CREATE INDEX IF NOT EXISTS idx_item_invoice_id ON item (invoice_id);
+
 CREATE TABLE IF NOT EXISTS payment (
     id SERIAL PRIMARY KEY,
     amount_in_cents INTEGER NOT NULL,
@@ -54,3 +56,5 @@ CREATE TABLE IF NOT EXISTS payment (
         FOREIGN KEY(invoice_id)
             REFERENCES Invoice(id)
 );
+
+CREATE INDEX IF NOT EXISTS idx_payment_invoice_id ON payment (invoice_id);
